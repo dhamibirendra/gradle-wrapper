@@ -1,0 +1,68 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'maven'
+
+description = 'SMSC Platform'
+group = 'com.fone.smsc'
+
+version = '1.0'
+
+if (hasProperty("teamcity")) {
+	String tcVersion = property("teamcity")["build.number"]
+	if(tcVersion.startsWith(version) && tcVersion != version) {
+		version = tcVersion
+	} else {
+		version += '.' + tcVersion
+	}
+	println "##teamcity[buildNumber '" + version + "']"
+} else {
+	version += '-SNAPSHOT'
+}
+
+repositories {
+		maven {
+			url 'http://10.13.212.254:8080/artifactory/libs-releases-local'
+			
+		}
+		
+		maven {
+			url 'http://10.13.212.254:8080/artifactory/repo'
+					
+		}
+	
+}
+
+
+configurations {
+	all*.exclude module: 'log4j'
+	all*.exclude module: 'icu4j'
+	all*.exclude module: 'catalina'
+}
+
+dependencies {
+	compile 'com.adenki:smppapi:0.3.9'
+	compile 'ch.qos.logback:logback-classic:1.0.9'
+	
+}
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+   
+artifacts {
+	archives sourcesJar
+}
+   
+uploadArchives {
+	repositories {
+		
+		mavenDeployer {
+			repository(url: "http://10.13.212.254:8080/artifactory/libs-releases-local") {
+				authentication(userName: "admin", password: "password")
+			}
+		}
+		
+	}
+}
