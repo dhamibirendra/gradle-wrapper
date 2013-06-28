@@ -3,8 +3,8 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven'
 
-description = 'SMSC Platform'
-group = 'com.fone.smsc'
+description = 'Test Platform'
+group = 'com.test'
 
 version = '1.0'
 
@@ -22,12 +22,12 @@ if (hasProperty("teamcity")) {
 
 repositories {
 		maven {
-			url 'http://10.13.212.254:8080/artifactory/libs-releases-local'
+			
 			
 		}
 		
 		maven {
-			url 'http://10.13.212.254:8080/artifactory/repo'
+			
 					
 		}
 	
@@ -59,8 +59,7 @@ uploadArchives {
 	repositories {
 		
 		mavenDeployer {
-			repository(url: "http://10.13.212.254:8080/artifactory/libs-releases-local") {
-				authentication(userName: "admin", password: "password")
+			
 			}
 		}
 		
